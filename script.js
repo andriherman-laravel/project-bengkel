@@ -140,37 +140,127 @@ const chatbot = document.getElementById("ai-chatbot");
 const input = document.getElementById("userInput");
 const chatBody = document.getElementById("chatBody");
 
-// toggle chat
-if(chatBtn && chatbot){
-  chatBtn.onclick = () => {
-    chatbot.style.display =
-      chatbot.style.display === "flex" ? "none" : "flex";
-  };
-}
+/// TOGGLE CHAT
+document.getElementById("chatBtn").onclick = function(){
+  let box = document.getElementById("ai-chatbot");
+  box.style.display = (box.style.display === "block") ? "none" : "block";
+};
 
-// AI RESPON
 function getBotReply(text){
   text = text.toLowerCase();
 
-  if(text.includes("halo") || text.includes("hai")){
-    return "Halo 👋 ada yang bisa kami bantu?";
+  // ================= SCORE SYSTEM =================
+  let score = {
+    mesin: 0,
+    aki: 0,
+    rem: 0,
+    ac: 0,
+    oli: 0,
+    kaki: 0,
+    transmisi: 0,
+    body: 0
+  };
+
+  // ================= MESIN =================
+  if(text.match(/(getar|brebet|mesin|tidak stabil|tarikan lemah)/)) score.mesin += 2;
+  if(text.match(/(mobil.*mati|tidak nyala|starter|susah hidup)/)) score.mesin += 3;
+  if(text.match(/(overheat|panas mesin)/)) score.mesin += 3;
+
+  // ================= AKI / LISTRIK =================
+  if(text.match(/(aki|lampu redup|starter lemah|kelistrikan)/)) score.aki += 3;
+
+  // ================= REM =================
+  if(text.match(/(rem|blong|tidak pakem|bunyi rem|keras)/)) score.rem += 3;
+
+  // ================= AC =================
+  if(text.match(/(ac|tidak dingin|hembusan lemah|bau ac)/)) score.ac += 3;
+
+  // ================= OLI =================
+  if(text.match(/(oli|ganti oli|oli hitam|oli habis)/)) score.oli += 2;
+
+  // ================= KAKI-KAKI =================
+  if(text.match(/(setir|getar bawah|shockbreaker|bunyi bawah)/)) score.kaki += 3;
+
+  // ================= TRANSMISI =================
+  if(text.match(/(transmisi|matic|kopling|gigi susah|pindah gigi)/)) score.transmisi += 3;
+
+  // ================= BODY REPAIR =================
+  if(text.match(/(penyok|baret|lecet|cat rusak|cat mengelupas)/)) score.body += 3;
+  if(text.match(/(tabrakan|tabrak|kecelakaan|benturan)/)) score.body += 4;
+  if(text.match(/(bumper|pintu|kap|spion|bagasi)/)) score.body += 2;
+  if(text.match(/(karat|berkarat)/)) score.body += 3;
+
+  // ================= AMBIL SCORE TERBESAR =================
+  let max = Object.keys(score).reduce((a,b) => score[a] > score[b] ? a : b);
+
+  if(score[max] === 0){
+    return "🔧 Mohon jelaskan lebih detail gejala kendaraan Anda (contoh: mobil getar saat jalan, AC tidak dingin, rem bunyi).";
   }
 
-  if(text.includes("harga")){
-    return "Harga tergantung kerusakan ya 😊 silakan kirim foto ke WhatsApp kami.";
+  // ================= DIAGNOSA MESIN =================
+  if(max === "mesin"){
+    return "🔧 DIAGNOSA MESIN:\nKemungkinan masalah pada pembakaran, engine mounting, atau sistem bahan bakar.\n💡 Saran: cek busi, injektor, dan throttle body di bengkel.";
   }
 
-  if(text.includes("lokasi")){
-    return "Kami berada di Sentul, Bogor 📍";
+  // ================= DIAGNOSA AKI =================
+  if(max === "aki"){
+    return "⚡ DIAGNOSA LISTRIK:\nAki lemah atau sistem pengisian tidak optimal (alternator).\n💡 Saran: cek tegangan aki dan dinamo.";
   }
 
-  if(text.includes("jam")){
-    return "Senin - Jumat: 09.00 - 17.00";
+  // ================= DIAGNOSA REM =================
+  if(max === "rem"){
+    return "🛑 DIAGNOSA REM:\nKampas rem aus atau minyak rem berkurang.\n💡 Saran: segera servis rem demi keselamatan.";
   }
 
-  return "Silakan hubungi WhatsApp kami ya 😊 👉 https://wa.me/6285931971828";
+  // ================= DIAGNOSA AC =================
+  if(max === "ac"){
+    return "❄️ DIAGNOSA AC:\nKemungkinan freon habis atau kompresor melemah.\n💡 Saran: servis AC & isi ulang freon.";
+  }
+
+  // ================= DIAGNOSA OLI =================
+  if(max === "oli"){
+    return "🛢️ DIAGNOSA OLI:\nOli mesin perlu diganti atau volume kurang.\n💡 Saran: ganti oli secara rutin setiap 5.000–10.000 km.";
+  }
+
+  // ================= DIAGNOSA KAKI-KAKI =================
+  if(max === "kaki"){
+    return "🚗 DIAGNOSA KAKI-KAKI:\nShockbreaker atau tie rod kemungkinan aus.\n💡 Saran: lakukan spooring & balancing.";
+  }
+
+  // ================= DIAGNOSA TRANSMISI =================
+  if(max === "transmisi"){
+    return "⚙️ DIAGNOSA TRANSMISI:\nKampas kopling aus atau oli transmisi bermasalah.\n💡 Saran: cek sistem transmisi di bengkel.";
+  }
+
+  // ================= DIAGNOSA BODY REPAIR =================
+  if(max === "body"){
+    return "🚗 DIAGNOSA BODY REPAIR:\nTerjadi kerusakan pada bodi kendaraan (penyok, baret, atau benturan).\n💡 Saran: lakukan perbaikan panel, repaint, atau dent repair di body repair.";
+  }
+
+  // ================= DEFAULT =================
+  return "🔧 Kami belum bisa mendiagnosa pasti.\nSilakan jelaskan lebih detail gejala kendaraan Anda (contoh: 'mobil getar saat jalan').";
 }
 
+// ================= CHAT SYSTEM =================
+function sendMessage(){
+  let input = document.getElementById("userInput");
+  let text = input.value;
+
+  if(text.trim() === "") return;
+
+  let chatBody = document.getElementById("chatBody");
+
+  // user message
+  chatBody.innerHTML += `<div class="user">${text}</div>`;
+
+  // bot reply
+  let reply = getBotReply(text);
+  chatBody.innerHTML += `<div class="bot">${reply}</div>`;
+
+  input.value = "";
+
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
 // kirim chat
 if(input && chatBody){
   input.addEventListener("keypress", function(e){

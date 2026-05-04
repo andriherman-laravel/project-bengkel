@@ -54,10 +54,9 @@ if(isset($_POST['kirim'])){
 <li class="nav-item"><a class="nav-link" href="#sejarah">Sejarah</a></li>
 <li class="nav-item"><a class="nav-link" href="#visi">Visi-Misi</a></li>
 <li class="nav-item"><a class="nav-link" href="#struktur">Struktur</a></li>
-<li class="nav-item"><a class="nav-link" href="#hasil-kerja">Hasil-Kerja</a></li>
+<li class="nav-item"><a class="nav-link" href="#hasil-kerja">Hasil Pengerjaan</a></li>
 <li class="nav-item"><a class="nav-link" href="#partner">Partner</a></li>
 <li class="nav-item"><a class="nav-link" href="#lokasi">Lokasi</a></li>
-<li class="nav-item"><a class="nav-link" href="#contact">Kontak</a></li>
 <div class="nav-indicator"></div>
 </ul>
 </div>
@@ -180,18 +179,24 @@ Telah menyelesaikan lebih dari
 </div>
 
 <div id="ai-chatbot">
-  <div class="chat-header">Customer Service 🤖</div>
+  
+  <div class="chat-header">
+    🔧 Bengkel Assistant AI
+  </div>
 
   <div class="chat-body" id="chatBody">
-    <div class="bot">Halo 👋 ada yang bisa kami bantu?</div>
+    <div class="bot">Halo 👋 Saya asisten bengkel. Silakan ceritakan gejala mobil Anda.</div>
   </div>
 
   <div class="chat-input">
-    <input type="text" id="userInput" placeholder="Tulis pertanyaan...">
+    <input type="text" id="userInput" placeholder="Contoh: mobil getar saat jalan...">
+    <button onclick="sendMessage()">➤</button>
   </div>
+
 </div>
 
 <button id="chatBtn">💬</button>
+
 </section>
 <!-- PARTNER SLIDER -->
 <section id="partner" class="py-5">
